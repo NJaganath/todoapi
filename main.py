@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, render_template
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from models import User, Todo, db
 from sqlalchemy.exc import IntegrityError
 from datetime import timedelta
+import templates
 
 app = Flask(__name__)
 
@@ -31,8 +32,13 @@ def get_user(username):
     return User.query.filter_by(username=username).first()
 
 @app.route('/', methods=['GET'])
-def index():
- return app.send_static_file('index.html')
+@app.route('/login', methods=['GET'])
+def login_page():
+  return render_template('LoginPage.jsx')
+
+@app.route('/signup', methods=['GET'])
+def signup_page():
+  return render_template('Signup.jsx')
 
 @app.route("/login", methods=["POST"])
 def login():
